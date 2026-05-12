@@ -1,0 +1,19 @@
+{
+  "name": "@smt/db",
+  "version": "0.0.1",
+  "private": true,
+  "exports": {
+    "./schema": "./src/schema.ts",
+    "./client": "./src/client.ts"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.39.0",
+    "postgres": "^3.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.39",
+    "dotenv": "^17.4.2",
+    "drizzle-kit": "^0.30.0",
+    "typescript": "^5.6.0"
+  }
+}
