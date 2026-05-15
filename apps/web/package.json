@@ -8,7 +8,10 @@
     "start": "next start"
   },
   "dependencies": {
+    "@smt/db": "workspace:*",
+    "drizzle-orm": "^0.39.3",
     "next": "16.2.4",
+    "postgres": "^3.4.9",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },
