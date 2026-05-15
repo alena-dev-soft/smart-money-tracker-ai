@@ -3,7 +3,9 @@
     "allow": [
       "Bash(pnpm dlx *)",
       "Bash(node_modules/.bin/tsc --noEmit --strict --skipLibCheck --moduleResolution bundler --module esnext --target esnext src/schema.ts)",
-      "Bash(node_modules/.bin/tsc *)"
+      "Bash(node_modules/.bin/tsc *)",
+      "Bash(npm install *)",
+      "Bash(pnpm add *)"
     ]
   }
 }
