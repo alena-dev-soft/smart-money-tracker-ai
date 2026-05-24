@@ -1,5 +1,5 @@
 import { Bot } from 'grammy';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { db } from '@smt/db/client';
 import { trackedWallets } from '@smt/db/schema';
 
@@ -34,6 +34,26 @@ bot.command('follow', async (ctx) => {
     .onConflictDoNothing();
 
   return ctx.reply(`Now tracking: ${address}`);
+});
+
+bot.command('unfollow', async (ctx) => {
+  const address = ctx.match.trim().toLowerCase();
+
+  if (!address) {
+    return ctx.reply('Usage: /unfollow <address>');
+  }
+
+  await db
+    .update(trackedWallets)
+    .set({ isActive: false })
+    .where(
+      and(
+        eq(trackedWallets.address, address),
+        eq(trackedWallets.userId, HARDCODED_USER_ID),
+      ),
+    );
+
+  return ctx.reply(`✅ Stopped tracking: ${address}`);
 });
 
 bot.command('list', async (ctx) => {
