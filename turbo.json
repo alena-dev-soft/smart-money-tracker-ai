@@ -1,5 +1,13 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalEnv": [
+    "DATABASE_URL",
+    "ALCHEMY_API_KEY",
+    "ALCHEMY_WEBHOOK_SECRET",
+    "UPSTASH_REDIS_URL",
+    "UPSTASH_REDIS_REST_URL",
+    "UPSTASH_REDIS_REST_TOKEN"
+  ],
   "tasks": {
     "dev": {
       "persistent": true,
