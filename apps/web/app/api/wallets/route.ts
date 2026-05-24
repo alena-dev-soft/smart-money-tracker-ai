@@ -2,26 +2,38 @@ import { NextRequest, NextResponse } from 'next/server';
 import { eq } from 'drizzle-orm';
 import { db } from '@smt/db/client';
 import { trackedWallets } from '@smt/db/schema';
-
-// TODO: replace with real auth
-const TEST_USER_ID = '00000000-0000-0000-0000-000000000001';
+import { createClient } from '@/lib/supabase/server';
 
 export async function GET() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const wallets = await db
     .select()
     .from(trackedWallets)
-    .where(eq(trackedWallets.userId, TEST_USER_ID));
+    .where(eq(trackedWallets.userId, user.id));
 
   return NextResponse.json(wallets);
 }
 
 export async function POST(req: NextRequest) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const body = await req.json() as { address: string; chain: string; label?: string };
 
   const [wallet] = await db
     .insert(trackedWallets)
     .values({
-      userId: TEST_USER_ID,
+      userId: user.id,
       address: body.address,
       chain: body.chain as typeof trackedWallets.$inferInsert['chain'],
       label: body.label ?? null,
