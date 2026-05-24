@@ -60,7 +60,12 @@ bot.command('list', async (ctx) => {
   const wallets = await db
     .select()
     .from(trackedWallets)
-    .where(eq(trackedWallets.userId, HARDCODED_USER_ID));
+    .where(
+      and(
+        eq(trackedWallets.userId, HARDCODED_USER_ID),
+        eq(trackedWallets.isActive, true),
+      ),
+    );
 
   if (wallets.length === 0) {
     return ctx.reply('No tracked wallets yet. Use /follow <address> to add one.');
