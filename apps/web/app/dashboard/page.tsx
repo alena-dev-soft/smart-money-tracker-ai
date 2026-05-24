@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { db } from '@smt/db/client';
 import { trackedWallets } from '@smt/db/schema';
 import SignOutButton from './sign-out-button';
+import TelegramConnectButton from './telegram-connect-button';
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -59,6 +60,8 @@ export default async function DashboardPage() {
             </ul>
           )}
         </div>
+
+        <TelegramConnectButton />
       </div>
     </div>
   );

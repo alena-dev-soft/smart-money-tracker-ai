@@ -100,4 +100,8 @@ bot.command('list', async (ctx) => {
   return ctx.reply(`Your tracked wallets:\n${lines}`);
 });
 
+bot.catch((err) => {
+  console.error('Bot error:', err.message);
+});
+
 bot.start();
