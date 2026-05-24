@@ -137,3 +137,10 @@ export const alertSettings = pgTable('alert_settings', {
   weeklyDigestEnabled: boolean('weekly_digest_enabled').notNull().default(true),
   minTxValueUsd: numeric('min_tx_value_usd', { precision: 38, scale: 18 }).default('100'),
 });
+
+export const linkTokens = pgTable('link_tokens', {
+  token: text('token').primaryKey(),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+});
