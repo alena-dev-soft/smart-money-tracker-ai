@@ -1,6 +1,9 @@
-import { Job } from 'bullmq';
+import { Job, Queue } from 'bullmq';
 import { db } from '@smt/db/client';
 import { walletTransactions } from '@smt/db/schema';
+import { redisConnection } from '../redis';
+
+const aiAnalyzeQueue = new Queue('ai-analyze', { connection: redisConnection });
 
 export async function enrichJob(job: Job) {
   console.log('Processing job:', job.data);
@@ -8,7 +11,7 @@ export async function enrichJob(job: Job) {
   const activity = job.data.rawEvent?.event?.activity?.[0];
   if (!activity) return;
 
-  const result = await db
+  const [tx] = await db
     .insert(walletTransactions)
     .values({
       address: activity.fromAddress.toLowerCase(),
@@ -21,7 +24,13 @@ export async function enrichJob(job: Job) {
       valueUsd: activity.value?.toString() ?? null,
       tokenInSymbol: activity.asset ?? null,
     })
-    .onConflictDoNothing();
+    .onConflictDoNothing()
+    .returning();
 
-  console.log('Saved transaction:', result);
+  if (!tx) return;
+
+  console.log('Saved transaction:', tx);
+
+  await aiAnalyzeQueue.add('ai-analyze', { walletTxId: tx.id });
+  console.log('Added to ai-analyze queue');
 }
